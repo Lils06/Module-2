@@ -17,3 +17,4 @@ contract Appointmentrate {
         assert(_PhotoshootRate == 2000); 
     }
 }
+ 
