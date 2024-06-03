@@ -1,38 +1,96 @@
 import React, { useState } from 'react';
 
 function DailyFoodConsumption() {
+  const [walletAddress, setWalletAddress] = useState('');
+  const [errorMessages, setErrorMessages] = useState('');
   const [morningConsumpt, setMorningConsumpt] = useState(0);
   const [lunchConsumpt, setLunchConsumpt] = useState(0);
   const [dinnerConsumpt, setDinnerConsumpt] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
+
+
+  const connectToMetaMask = async () => {
+    if (window.ethereum) {
+      try {
+        // Request access to MetaMask wallet
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+        // Get the connected wallet address
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+        } else {
+          setErrorMessages('No account found. Please make sure you have a wallet connected.');
+        }
+        
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error);
+      }
+    } else {
+      setErrorMessages('MetaMask is not installed. Please install MetaMask to use this feature.');
+    }
+  };
+
 
   const handleMorning = () => {
-    if (morningConsumpt <= 100) {
-      setErrorMessage('I\'m still hungry, I need more food in my breakfast.');
-    } else {
-      setErrorMessage('');
+    if(walletAddress != ""){
+      if (morningConsumpt < 100) {
+        setErrorMessage('I\'m still hungry, I need more food in my breakfast.');
+      } else {
+        setErrorMessage('');
+        setMessage('I\'m full, so yummy my tommy!');
+      }
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
     }
   };
 
   const handleLunch = () => {
-    if (lunchConsumpt < 50) {
+    if(walletAddress != ""){
+      if (lunchConsumpt < 50) {
       setErrorMessage('I\'m still hungry, I need food in my lunch.');
     } else {
       setErrorMessage('');
+      setMessage('I\'m full, so yummy my tommy!');
     }
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
+    }
+    
   };
 
   const handleDinner = () => {
-    if (dinnerConsumpt < 20) {
+    if(walletAddress != ""){
+      if (dinnerConsumpt < 20) {
       setErrorMessage('I\'m still hungry, I need food in my dinner.');
     } else {
       setErrorMessage('');
+      setMessage('I\'m full, so yummy my tommy!');
     }
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
+    }
+    
   };
 
   return (
     <div id='container'>
     <div>
+      <h2>Connect to MetaMask</h2>
+      <button onClick={connectToMetaMask}>Connect</button>
+      {walletAddress && (
+        <div>
+          <p>Connected Wallet Address:</p>
+          <p>{walletAddress}</p>
+        </div>
+      )}
+      {errorMessages && <p>{errorMessages}</p>}
+      <br />
+
       <h2>Daily Food Consumption</h2>
       <div>
         <label>Morning Consumption:</label>
@@ -62,6 +120,7 @@ function DailyFoodConsumption() {
         <button onClick={handleDinner}>Submit</button>
       </div>
       {errorMessage && <p style={{ color: 'red'}}>{errorMessage}</p>} 
+      {message && <p style={{ color: 'green'}}>{message}</p>} 
       </div>
       <style jsx>{`
         #container{
