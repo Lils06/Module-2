@@ -1,18 +1,52 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.9;
 
-contract DailyFoodConsumption {
+contract ReactAssessment {
+    address public owner;
+    uint256 public assessmentCount;
 
-    function Morning(uint MorningConsumpt) public pure {
-        require(MorningConsumpt > 100, "I'm still hungry, I need more food in my breakfast.");
+    struct Assessment {
+        uint256 id;
+        string title;
+        string description;
+        uint256 timestamp;
     }
 
-    function Lunch(uint LunchConsumpt) public pure {
-        if (LunchConsumpt < 50) {
-            revert("I'm still hungry, I need food in my lunch.");
+    mapping(uint256 => Assessment) public assessments;
+
+    event AssessmentAdded(uint256 id, string title, string description, uint256 timestamp);
+
+    constructor() {
+        owner = msg.sender;
+        assessmentCount = 0;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You are not the owner");
+        _;
+    }
+
+    function addAssessment(string memory _title, string memory _description) public onlyOwner {
+        assessmentCount++;
+        assessments[assessmentCount] = Assessment(assessmentCount, _title, _description, block.timestamp);
+
+        emit AssessmentAdded(assessmentCount, _title, _description, block.timestamp);
+    }
+
+    function getAssessment(uint256 _id) public view returns (Assessment memory) {
+        require(_id > 0 && _id <= assessmentCount, "Assessment does not exist");
+        return assessments[_id];
+    }
+
+    function getAllAssessments() public view returns (Assessment[] memory) {
+        Assessment[] memory result = new Assessment[](assessmentCount);
+        for (uint256 i = 1; i <= assessmentCount; i++) {
+            result[i - 1] = assessments[i];
         }
+        return result;
     }
 
-    function Dinner(uint256 DinnerConsumpt) public pure {
-        assert(DinnerConsumpt >= 20, "I'm still hungry, I need more food.");
+    function getAssessmentCount() public view returns (uint256) {
+        return assessmentCount;
+    }
 }
