@@ -1,20 +1,19 @@
 / SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.25;
 
-contract Appointmentrate {
+contract DailyFoodConsumption {
 
-    function PrenupRate(uint _PrenupRate) public pure {
-        require(_PrenupRate == 3000, " My Pren-up rate was 3000");
-    } 
+    function Morning(uint MorningConsumpt) public pure {
+        require(MorningConsumpt > 100, "Im still hungry, I need more food in my breakfast.");
+    }
 
-    function BirthdayRate(uint _BirthdayRate) public pure {
-        if (_BirthdayRate != 1500) {
-            revert("My Birthday rate was 1500");
+    function Lunch(uint LunchConsumpt) public pure {
+        if (LunchConsumpt < 50) {
+            revert("Im still hungry, I need food in my lunch.");
         }
     }
-    
-    function PhotoshootRate(uint _PhotoshootRate) public pure{
-        assert(_PhotoshootRate == 2000); 
+
+    function Dinner(uint256 DinnerConsumpt) public pure {
+        assert(DinnerConsumpt == 20);
     }
 }
- 
