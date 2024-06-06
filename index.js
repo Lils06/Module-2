@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 
-function ConnectWallet() {
+function DailyFoodConsumption() {
   const [walletAddress, setWalletAddress] = useState('');
+  const [errorMessages, setErrorMessages] = useState('');
+  const [morningConsumpt, setMorningConsumpt] = useState(0);
+  const [lunchConsumpt, setLunchConsumpt] = useState(0);
+  const [dinnerConsumpt, setDinnerConsumpt] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
-  const [error, setErrors] = useState('');
 
-  // Function to connect to MetaMask
+
   const connectToMetaMask = async () => {
     if (window.ethereum) {
       try {
@@ -17,52 +20,65 @@ function ConnectWallet() {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
-          setErrors("");
         } else {
-          setErrorMessage('No account found. Please make sure you have a wallet connected.');
+          setErrorMessages('No account found. Please make sure you have a wallet connected.');
         }
         
       } catch (error) {
         console.error('Error connecting to MetaMask:', error);
       }
     } else {
-      setErrorMessage('MetaMask is not installed. Please install MetaMask to use this feature.');
+      setErrorMessages('MetaMask is not installed. Please install MetaMask to use this feature.');
     }
   };
-  // Function to handle button click
-  const handleClick = (value, type) => {
+
+
+  const handleMorning = () => {
     if(walletAddress != ""){
-      if (type === 'prenup') {
-        if (value < 3000) {
-          setMessage('My Pren-up rate is 3000');
-        } else if (value === 3000) {
-          setMessage("Let's make a schedule!");
-        } else {
-          setMessage('Prenup rate should be 3000 or less');
-        }
-      } else if (type === 'birthday') {
-        if (value === 1500) {
-          setMessage("Let's make a schedule!");
-        } else {
-          setMessage('Birthday rate should be 1500');
-        }
-      } else if (type === 'photoshoot') {
-        if (value === 2000) {
-          setMessage("Let's make a schedule!");
-        } else {
-          setMessage('Photoshoot rate should be 2000');
-        }
+      if (morningConsumpt < 100) {
+        setErrorMessage('I\'m still hungry, I need more food in my breakfast.');
+      } else {
+        setErrorMessage('');
+        setMessage('I\'m full, so yummy my tommy!');
       }
-      setErrors("");
-    }else{
-      setErrors("CONNECT FIRST");
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
     }
   };
 
+  const handleLunch = () => {
+    if(walletAddress != ""){
+      if (lunchConsumpt < 50) {
+      setErrorMessage('I\'m still hungry, I need food in my lunch.');
+    } else {
+      setErrorMessage('');
+      setMessage('I\'m full, so yummy my tommy!');
+    }
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
+    }
+    
+  };
 
+  const handleDinner = () => {
+    if(walletAddress != ""){
+      if (dinnerConsumpt < 20) {
+      setErrorMessage('I\'m still hungry, I need food in my dinner.');
+    } else {
+      setErrorMessage('');
+      setMessage('I\'m full, so yummy my tommy!');
+    }
+    }
+    else{
+      setErrorMessage('YOU MUST CONNECT METAMASK');
+    }
+    
+  };
 
   return (
-	<div className="container">
+    <div id='container'>
     <div>
       <h2>Connect to MetaMask</h2>
       <button onClick={connectToMetaMask}>Connect</button>
@@ -72,69 +88,56 @@ function ConnectWallet() {
           <p>{walletAddress}</p>
         </div>
       )}
-      {errorMessage && <p>{errorMessage}</p>}
+      {errorMessages && <p>{errorMessages}</p>}
+      <br />
 
-      <div className='newcont'>
-      <h2 className="title">My Photoshoot Rate</h2>
-        <input type="number" id="prenupInput" placeholder="Enter Prenup Rate" />
-        <button className="cont2but" onClick={() => handleClick(parseInt(document.getElementById('prenupInput').value), 'prenup')}>Get Prenup Rate</button>
+      <h2>Daily Food Consumption</h2>
+      <div>
+        <label>Morning Consumption:</label>
+        <input
+          type="number"
+          value={morningConsumpt}
+          onChange={(e) => setMorningConsumpt(parseInt(e.target.value))}
+        />
+        <button onClick={handleMorning}>Submit</button>
       </div>
       <div>
-        <input type="number" id="birthdayInput" placeholder="Enter Birthday Rate" />
-        <button onClick={() => handleClick(parseInt(document.getElementById('birthdayInput').value), 'birthday')}>Get Birthday Rate</button>
+        <label>Lunch Consumption:</label>
+        <input
+          type="number"
+          value={lunchConsumpt}
+          onChange={(e) => setLunchConsumpt(parseInt(e.target.value))}
+        />
+        <button onClick={handleLunch}>Submit</button>
       </div>
       <div>
-        <input type="number" id="photoshootInput" placeholder="Enter Photoshoot Rate" />
-        <button onClick={() => handleClick(parseInt(document.getElementById('photoshootInput').value), 'photoshoot')}>Get Photoshoot Rate</button>
+        <label>Dinner Consumption:</label>
+        <input
+          type="number"
+          value={dinnerConsumpt}
+          onChange={(e) => setDinnerConsumpt(parseInt(e.target.value))}
+        />
+        <button onClick={handleDinner}>Submit</button>
       </div>
-      <p>{message}</p>
-      <p className="error">{error}</p>
-	</div>
+      {errorMessage && <p style={{ color: 'red'}}>{errorMessage}</p>} 
+      {message && <p style={{ color: 'green'}}>{message}</p>} 
+      </div>
       <style jsx>{`
-        .container{
+        #container{
+          margin-top: 150pt;
+          text-align: center;
+        }
+        div{
           margin-left: auto;
           margin-right: auto;
           width: fit-content;
-          text-align: center;
-          margin-top: 150pt;
-          border: 1px solid #ccc;
-          padding: 50px;
-          border-radius: 30pt;
         }
-
-        .newcont{
-          margin-top: 50pt;
-        }
-
-        button {
-          margin-left: 5pt;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 2px;
-          cursor: pointer;
-          transition: 0.1s ease-in-out;
-        }
-
-        button:hover {
-          transform: scale(1.1);
-          background-color: darkblue;
-          color: white;
-        }
-
-        input{
-          border: 0;
-          height: 20pt;
-          border-bottom: 2pt solid gray;
-          margin-bottom: 20pt;
-        }
-
-        .error{
-          color: red;
+        p{
+          text-decoration: underline;
         }
       `}</style>
     </div>
   );
 }
 
-export default ConnectWallet;
+export default DailyFoodConsumption;
