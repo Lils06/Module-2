@@ -14,6 +14,6 @@ contract DailyFoodConsumption {
     }
 
     function Dinner(uint256 DinnerConsumpt) public pure {
-        assert(DinnerConsumpt == 20, "I'm still hungry, I need food in my dinner.");
+        assert(DinnerConsumpt >= 20, "I'm still hungry, I need food in my dinner.");
     }
 }
