@@ -13,10 +13,10 @@ function DailyFoodConsumption() {
   const connectToMetaMask = async () => {
     if (window.ethereum) {
       try {
-        // Request access to MetaMask wallet
+        
         await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-        // Get the connected wallet address
+       
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
@@ -57,6 +57,7 @@ function DailyFoodConsumption() {
     }
     }
     else{
+      setErrorMessage('');
       setErrorMessage('YOU MUST CONNECT METAMASK');
     }
     
