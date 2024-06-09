@@ -14,6 +14,8 @@ contract DailyFoodConsumption {
     }
 
     function Dinner(uint256 DinnerConsumpt) public pure {
-        require(DinnerConsumpt >= 20, "I'm still hungry, I need more food in my Dinner.");
+        if (DinnerConsumpt < 20) {
+        revert("I'm still hungry, I need more food in my Dinner."); 
+        }
     }
 }
