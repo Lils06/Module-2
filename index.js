@@ -20,6 +20,7 @@ function DailyFoodConsumption() {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
+          setErrorMessage("")
         } else {
           setErrorMessages('No account found. Please make sure you have a wallet connected.');
         }
@@ -37,6 +38,7 @@ function DailyFoodConsumption() {
     if(walletAddress != ""){
       if (morningConsumpt < 100) {
         setErrorMessage('I\'m still hungry, I need more food in my breakfast.');
+        setMessage("");
       } else {
         setErrorMessage('');
         setMessage('I\'m full, so yummy my tommy!');
@@ -51,13 +53,13 @@ function DailyFoodConsumption() {
     if(walletAddress != ""){
       if (lunchConsumpt < 50) {
       setErrorMessage('I\'m still hungry, I need food in my lunch.');
+      setMessage("");
     } else {
       setErrorMessage('');
       setMessage('I\'m full, so yummy my tommy!');
     }
     }
     else{
-      setErrorMessage('');
       setErrorMessage('YOU MUST CONNECT METAMASK');
     }
     
@@ -67,6 +69,7 @@ function DailyFoodConsumption() {
     if(walletAddress != ""){
       if (dinnerConsumpt < 20) {
       setErrorMessage('I\'m still hungry, I need food in my dinner.');
+      setMessage("");
     } else {
       setErrorMessage('');
       setMessage('I\'m full, so yummy my tommy!');
